@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(presentes)
 library(tidyverse)
 library(dplyr)
+library(readr)
 
 ```
 
@@ -37,7 +38,7 @@ La base de datos cuenta con cinco conjunto de datos:
 ```{r}
 # Código para cargar o leer los datos
 
-
+read_csv(apodos)
 ```
 
 
