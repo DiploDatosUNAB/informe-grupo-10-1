@@ -30,24 +30,43 @@ La base de datos cuenta con cinco conjunto de datos:
 4) Victimas del accionar represivo ilegal
 5) Victimas del accionar represeivo ilegal sin denuncia formal. 
 
-
+De las cinco bases de datos, seleccionaremos en principio la base titulada "victimas del accionar represivo ilegal" con el objeto de indagar sobre la nacionalidad, el año, el tipo de delito del que fue víctima, entre otros. 
 
 ## Exploración de los datos
 
+vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
+
+Primero vamos filtrando para acercarnos a los datos. 
+Filtramos el año de denuncia. 
 
 ```{r}
 # Código para cargar o leer los datos
 
-read_csv(apodos)
+victimas_accionar_represivo_ilegal|>
+  filter(anio_denuncia == 1984, na.rnn= TRUE)
+
+
 ```
 
-
+Filtramos para indagar en la cantidad de victimas de nacionalidad argentina. 
 
 ```{r}
 # Cödigo de R acá 
+
+victimas_accionar_represivo_ilegal|>
+  filter(nacionalidad == "ARGENTINA")
+
+
 # Agregá más bloques según sea necesario
 ```
 
+
+Realizamos un filtro para indagar la cantidad de victimas por desaparición forzada.
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(tipificacion_ruvte == "DESAPARICION FORZADA")
+```
 
 
 ## Hipótesis
