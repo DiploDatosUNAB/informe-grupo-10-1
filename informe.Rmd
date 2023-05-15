@@ -19,7 +19,16 @@ library(dplyr)
 ## Introducción
 
 En este trabajo práctico vamos a analizar los datos titulados Desaparecidos. Este conjunto de datos facilita el acceso a los registros estatales de las personas desaparecidas en la última dictadura militar argentina desarrollada entre el 24 de marzo de 1976 y el 10 de diciembre de 1983. 
-Los datos, según la información presente en el repositorio, provienen del Registro Único de Víctimas del Terrorismo de Estado (RUVTE) dependiente de la Secretaría de Derechos Humanos y Pluralismo Cultural del Ministerio de Justicia y Derechos Humanos de la Nación, creado por Resolución 1261/2014 de dicho Ministerio (https://datos.gob.ar/dataset/justicia-registro-unificado-victimas-terrorismo-estado--ruvte-). En segundo lugar, el Monumento a las Víctimas del Terrorismo de Estado, realizado por el Consejo de Gestión del Parque de la Memoria y del Monumento a las Víctimas del Terrorismo de Estado, creado por la ley 3078 de la Ciudad de Buenos Aires (http://basededatos.parquedelamemoria.org.ar/). Ambos registros recogen información de víctimas asesinadas o detenidas/desaparecidas aún antes de la fecha del inicio formal del golpe de estado militar.
+Los datos fueron obtenidos por Diego Kozlowski. Según la información presente en el repositorio, provienen del Registro Único de Víctimas del Terrorismo de Estado (RUVTE) dependiente de la Secretaría de Derechos Humanos y Pluralismo Cultural del Ministerio de Justicia y Derechos Humanos de la Nación, creado por Resolución 1261/2014 de dicho Ministerio (https://datos.gob.ar/dataset/justicia-registro-unificado-victimas-terrorismo-estado--ruvte-). En segundo lugar, el Monumento a las Víctimas del Terrorismo de Estado, realizado por el Consejo de Gestión del Parque de la Memoria y del Monumento a las Víctimas del Terrorismo de Estado, creado por la ley 3078 de la Ciudad de Buenos Aires (http://basededatos.parquedelamemoria.org.ar/). Ambos registros recogen información de víctimas asesinadas o detenidas/desaparecidas aún antes de la fecha del inicio formal del golpe de estado militar.
+La base de datos fue publicada el 5 de noviembre de 2019.
+
+La base de datos cuenta con cinco conjunto de datos:
+1) Apodos
+2) Centros clandestinos de detención
+3) Parque de la Memoria
+4) Victimas del accionar represivo ilegal
+5) Victimas del accionar represeivo ilegal sin denuncia formal. 
+
 
 
 ## Exploración de los datos
