@@ -37,7 +37,14 @@ De las cinco bases de datos, seleccionaremos en principio la base titulada "vict
 vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 
 Primero vamos filtrando para acercarnos a los datos. 
-Filtramos el año de denuncia. 
+Filtramos el lugar de detención/secuestro. 
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(lugar_detencion_secuestro == "CAPITAL FEDERAL")
+```
+
+
 
 ```{r}
 # Código para cargar o leer los datos
@@ -67,11 +74,16 @@ Realizamos un filtro para indagar la cantidad de victimas por desaparición forz
 victimas_accionar_represivo_ilegal|>
   filter(tipificacion_ruvte == "DESAPARICION FORZADA")|>
   filter(edad_al_momento_del_hecho_numerico <=30)|>
-  summarize()
+  
+
+```
+```{r}
+victimas_accionar_represivo_ilegal|>
+  summarize(median(edad_al_momento_del_hecho_numerico))
 
 ```
 
 
 ## Hipótesis
 
-
+Como primera hipótesis exploratoria, sostenemos que la mayoría de las victima del accionar represivo ilegal fueron secuestradas en grandes centros urbanos tales como Buenos Aires, Córdoba y Santa Fe y eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayor parte de las denuncias formales se realizaron en el año 1984. Por último, creemos que, en menos del 10% de las denuncias fueron hallados los restos o determinado la fecha del asesinato.  
