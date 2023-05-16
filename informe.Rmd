@@ -65,7 +65,10 @@ Realizamos un filtro para indagar la cantidad de victimas por desaparición forz
 
 ```{r}
 victimas_accionar_represivo_ilegal|>
-  filter(tipificacion_ruvte == "DESAPARICION FORZADA")
+  filter(tipificacion_ruvte == "DESAPARICION FORZADA")|>
+  filter(edad_al_momento_del_hecho_numerico <=30)|>
+  summarize()
+
 ```
 
 
