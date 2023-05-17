@@ -37,20 +37,47 @@ De las cinco bases de datos, seleccionaremos en principio la base titulada "vict
 vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 
 Primero vamos filtrando para acercarnos a los datos. 
+
+En primer lugar, vamos a calcular la edad promedio de las victimas. 
+
+
 Filtramos el lugar de detención/secuestro. 
 
 ```{r}
 victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro == "CAPITAL FEDERAL")
+  filter(lugar_detencion_secuestro %in% "BUENOS AIRES")|>
+  group_by(lugar_detencion_secuestro %in% "BUENOS AIRES")|>
+   summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+
+```
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(lugar_detencion_secuestro %in% "CORDOBA")|>
+  group_by(lugar_detencion_secuestro %in% "CORDOBA")|>
+  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+  
+
 ```
 
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(lugar_detencion_secuestro %in% "MENDOZA")|>
+  group_by(lugar_detencion_secuestro %in% "MENDOZA")|>
+  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+```
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(lugar_detencion_secuestro %in% "SANTA FE")|>
+  group_by(lugar_detencion_secuestro %in% "SANTA FE")|>
+  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+```
 
 
 ```{r}
 # Código para cargar o leer los datos
 
 victimas_accionar_represivo_ilegal|>
-  filter(anio_denuncia == 1984, na.rnn= TRUE)
+  group_by(anio_denuncia, anio_nacimiento, edad_al_momento_del_hecho)
 
 
 ```
@@ -61,7 +88,9 @@ Filtramos para indagar en la cantidad de victimas de nacionalidad argentina.
 # Cödigo de R acá 
 
 victimas_accionar_represivo_ilegal|>
-  filter(nacionalidad == "ARGENTINA")
+  filter(nacionalidad == "ARGENTINA")|>
+  count(nacionalidad == "ARGENTINA")
+
 
 
 # Agregá más bloques según sea necesario
@@ -71,15 +100,16 @@ victimas_accionar_represivo_ilegal|>
 Realizamos un filtro para indagar la cantidad de victimas por desaparición forzada.
 
 ```{r}
-victimas_accionar_represivo_ilegal|>
-  filter(tipificacion_ruvte == "DESAPARICION FORZADA")|>
-  filter(edad_al_momento_del_hecho_numerico <=30)|>
-  
 
+victimas_accionar_represivo_ilegal|>
+  count(tipificacion_ruvte == "DESAPARICION FORZADS")
+  
 ```
+
+Ahora vamos a filtrar cuantos restos de desaparecidos fueron hallados. 
 ```{r}
 victimas_accionar_represivo_ilegal|>
-  summarize(median(edad_al_momento_del_hecho_numerico))
+  select(fecha_asesinato_o_hallazgo_de_restos)
 
 ```
 
