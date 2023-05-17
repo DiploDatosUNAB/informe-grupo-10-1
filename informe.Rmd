@@ -13,6 +13,7 @@ library(presentes)
 library(tidyverse)
 library(dplyr)
 library(readr)
+victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 
 ```
 
@@ -39,7 +40,11 @@ vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 Primero vamos filtrando para acercarnos a los datos. 
 
 En primer lugar, vamos a calcular la edad promedio de las victimas. 
+```{r}
+victimas_accionar_represivo_ilegal|>
+  summarize(mean(edad_al_momento_del_hecho_numerico, na.rm = TRUE))                               
 
+```
 
 Filtramos el lugar de detención/secuestro. 
 
