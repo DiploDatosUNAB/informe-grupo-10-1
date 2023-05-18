@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 # Cargar los paquetes necesarios acá
 
 library(presentes)
-library(tidyverse)
 library(dplyr)
 library(readr)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
@@ -31,7 +30,9 @@ La base de datos cuenta con cinco conjunto de datos:
 4) Victimas del accionar represivo ilegal
 5) Victimas del accionar represeivo ilegal sin denuncia formal. 
 
-De las cinco bases de datos, seleccionaremos en principio la base titulada "victimas del accionar represivo ilegal" con el objeto de indagar sobre la nacionalidad, el año, el tipo de delito del que fue víctima, entre otros. 
+De las cinco bases de datos, seleccionaremos en principio la base titulada "victimas del accionar represivo ilegal".Esta base de datos cuenta con un total de 20 columnas con 8753 entradas. En las columnas podemos encontrar los siguientes temas o variables: id_unico_rouvte, anio_denuncia, tipificacion_ruvte, apellido_paterno_nombres, apellido_materno, apellido_casada, edad_al_momento_del_hecho, documentos, anio_nacimiento, provincia_nacimiento, pais_nacimiento, nacionalidad, embarazo, fecha_detencion_secuestro, lugar_detencion_secuestro,fecha_asesinato_o_hallazgos_de_restos, lugar_asesinato_o_hallazgos_de_restos, fotografia, provincia_nacimiento_indec_id y pais_nacimiento_indec_id. 
+
+En la primera exploración de los datos nos concetraremos sobre todo en algunas columnas tales como la nacionalidad, el año de detención, el año de denuncia, el tipo de delito del que fue víctima, la provincia de detención. 
 
 ## Exploración de los datos
 
