@@ -113,6 +113,52 @@ victimas_accionar_represivo_ilegal|>
 
 ```
 
+Filtrar según centros urbanos de lugar de victimas de represion ilegal 
+
+```{r}
+
+filter(victimas_accionar_represivo_ilegal, lugar_detencion_secuestro == "BUENOS AIRES"|lugar_detencion_secuestro == "SANTA FE"| lugar_detencion_secuestro == "CAPITAL FEDERAL")
+
+
+```
+
+Desaparecidos menores a 30 años
+
+```{r}
+
+filter(victimas_accionar_represivo_ilegal, edad_al_momento_del_hecho_numerico <=30)
+
+```
+
+mediana de las denuncias de 1984
+
+```{r}
+denuncias_1984 <-
+filter(victimas_accionar_represivo_ilegal, anio_denuncia == "1984") 
+media_denuncias <- mean(denuncias_1984)
+
+```
+
+
+
+
+```
+
+porcentaje de de cuantos fueron hallados o fallecidos
+
+este no entendi como seria?
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
 
 ## Hipótesis
 
