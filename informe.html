@@ -380,123 +380,140 @@ Centros clandestinos de detención 3) Parque de la Memoria 4) Victimas
 del accionar represivo ilegal 5) Victimas del accionar represeivo ilegal
 sin denuncia formal.</p>
 <p>De las cinco bases de datos, seleccionaremos en principio la base
-titulada “victimas del accionar represivo ilegal” con el objeto de
-indagar sobre la nacionalidad, el año, el tipo de delito del que fue
-víctima, entre otros.</p>
+titulada “victimas del accionar represivo ilegal”.Esta base de datos
+cuenta con un total de 20 columnas con 8753 entradas. En las columnas
+podemos encontrar los siguientes temas o variables: id_unico_rouvte,
+anio_denuncia, tipificacion_ruvte, apellido_paterno_nombres,
+apellido_materno, apellido_casada, edad_al_momento_del_hecho,
+documentos, anio_nacimiento, provincia_nacimiento, pais_nacimiento,
+nacionalidad, embarazo, fecha_detencion_secuestro,
+lugar_detencion_secuestro,fecha_asesinato_o_hallazgos_de_restos,
+lugar_asesinato_o_hallazgos_de_restos, fotografia,
+provincia_nacimiento_indec_id y pais_nacimiento_indec_id.</p>
+<p>En la primera exploración de los datos nos concetraremos sobre todo
+en algunas columnas tales como la nacionalidad, el lugar de detención,
+el año de denuncia, el tipo de delito del que fue víctima, la provincia
+de origen.</p>
 </div>
 <div id="exploración-de-los-datos" class="section level2">
 <h2>Exploración de los datos</h2>
 <p>vamos a trabajar con la tabla victimas_accionar_represivo_ilegal</p>
 <p>Primero vamos filtrando para acercarnos a los datos.</p>
-<p>En primer lugar, vamos a calcular la edad promedio de las
-victimas.</p>
-<p>Filtramos el lugar de detención/secuestro.</p>
+<p>Primero contamos cuantas victimas hay de nacionalidad argentina y
+menores a 30 años.</p>
 <pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  filter(lugar_detencion_secuestro %in% &quot;BUENOS AIRES&quot;)|&gt;
-  group_by(lugar_detencion_secuestro %in% &quot;BUENOS AIRES&quot;)|&gt;
-   summarise(promedio = mean(anio_denuncia, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `lugar_detencion_secuestro %in% &quot;BUENOS AIRES&quot;` promedio
-##   &lt;lgl&gt;                                              &lt;dbl&gt;
-## 1 TRUE                                               1987.</code></pre>
-<pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  filter(lugar_detencion_secuestro %in% &quot;CORDOBA&quot;)|&gt;
-  group_by(lugar_detencion_secuestro %in% &quot;CORDOBA&quot;)|&gt;
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `lugar_detencion_secuestro %in% &quot;CORDOBA&quot;` promedio
-##   &lt;lgl&gt;                                         &lt;dbl&gt;
-## 1 TRUE                                          1989.</code></pre>
-<pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  filter(lugar_detencion_secuestro %in% &quot;MENDOZA&quot;)|&gt;
-  group_by(lugar_detencion_secuestro %in% &quot;MENDOZA&quot;)|&gt;
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `lugar_detencion_secuestro %in% &quot;MENDOZA&quot;` promedio
-##   &lt;lgl&gt;                                         &lt;dbl&gt;
-## 1 TRUE                                          1988.</code></pre>
-<pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  filter(lugar_detencion_secuestro %in% &quot;SANTA FE&quot;)|&gt;
-  group_by(lugar_detencion_secuestro %in% &quot;SANTA FE&quot;)|&gt;
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `lugar_detencion_secuestro %in% &quot;SANTA FE&quot;` promedio
-##   &lt;lgl&gt;                                          &lt;dbl&gt;
-## 1 TRUE                                           1988.</code></pre>
-<pre class="r"><code># Código para cargar o leer los datos
-
+  count(nacionalidad == &quot;ARGENTINA&quot;, edad_al_momento_del_hecho &lt;=30)</code></pre>
+<pre><code>## # A tibble: 4 × 3
+##   `nacionalidad == &quot;ARGENTINA&quot;` `edad_al_momento_del_hecho &lt;= 30`     n
+##   &lt;lgl&gt;                         &lt;lgl&gt;                             &lt;int&gt;
+## 1 FALSE                         FALSE                               282
+## 2 FALSE                         TRUE                                299
+## 3 TRUE                          FALSE                              2593
+## 4 TRUE                          TRUE                               5579</code></pre>
+<pre class="r"><code>ciudades = c(&quot;BUENOS AIRES&quot;, &quot;CORDOBA&quot;, &quot;MENDOZA&quot;, &quot;SANTA FE&quot;, &quot;CAPITAL FEDERAL&quot;)
 victimas_accionar_represivo_ilegal|&gt;
-  group_by(anio_denuncia, anio_nacimiento, edad_al_momento_del_hecho)</code></pre>
-<pre><code>## # A tibble: 8,753 × 20
-## # Groups:   anio_denuncia, anio_nacimiento, edad_al_momento_del_hecho [1,586]
-##    id_unico_ruvte anio_denuncia tipificacion_ruvte   apellido_paterno_nombres   
-##    &lt;chr&gt;                  &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;                      
-##  1 5389                    1984 DESAPARICION FORZADA ABACHIAN  JUAN CARLOS      
-##  2 87                      1984 DESAPARICION FORZADA ABAD  ANA CATALINA         
-##  3 11788                   1984 DESAPARICION FORZADA ABAD  JULIO RICARDO        
-##  4 9907                    1984 ASESINATO            ABAD  OSCAR GERARDO        
-##  5 89                      1984 DESAPARICION FORZADA ABAD  ROBERTO RODOLFO TOMAS
-##  6 88                      1984 DESAPARICION FORZADA ABAD  ROUMALDO RICARDO     
-##  7 9906                    1984 ASESINATO            ABAD  SUSANA BEATRIZ       
-##  8 90                      1984 DESAPARICION FORZADA ABADI  CARLOS ALBERTO      
-##  9 91                      1984 DESAPARICION FORZADA ABADIA  DOMINGA            
-## 10 92                      1984 DESAPARICION FORZADA ABADIA  FELICIDAD          
-## # ℹ 8,743 more rows
+  filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho&lt;=30)</code></pre>
+<pre><code>## # A tibble: 1,353 × 20
+##    id_unico_ruvte anio_denuncia tipificacion_ruvte        apellido_paterno_nom…¹
+##    &lt;chr&gt;                  &lt;dbl&gt; &lt;chr&gt;                     &lt;chr&gt;                 
+##  1 11788                   1984 DESAPARICION FORZADA      ABAD  JULIO RICARDO   
+##  2 90                      1984 DESAPARICION FORZADA      ABADI  CARLOS ALBERTO 
+##  3 98                      1984 DESAPARICION FORZADA / E… ABELEDO  HORACIO ADOL…
+##  4 104                     1984 DESAPARICION FORZADA      ABRIATA  HERNAN       
+##  5 106                     1984 DESAPARICION FORZADA / E… ABUTTI  MARIA GUILLER…
+##  6 109                     1984 DESAPARICION FORZADA      ACOSTA  ADRIANA INES  
+##  7 110                     1984 DESAPARICION FORZADA      ACOSTA  CARLOS OSVALDO
+##  8 111                     1984 DESAPARICION FORZADA      ACOSTA  DORA MARIA DE…
+##  9 113                     1984 DESAPARICION FORZADA      ACOSTA  VICTOR HUGO   
+## 10 9418                    1984 DESAPARICION FORZADA      ACUÑA  FEDERICO MATIA…
+## # ℹ 1,343 more rows
+## # ℹ abbreviated name: ¹​apellido_paterno_nombres
 ## # ℹ 16 more variables: apellido_materno &lt;chr&gt;, apellido_casada &lt;chr&gt;,
 ## #   edad_al_momento_del_hecho &lt;chr&gt;, documentos &lt;chr&gt;, anio_nacimiento &lt;chr&gt;,
 ## #   provincia_nacimiento &lt;chr&gt;, pais_nacimiento &lt;chr&gt;, nacionalidad &lt;chr&gt;,
 ## #   embarazo &lt;chr&gt;, fecha_detencion_secuestro &lt;chr&gt;,
-## #   lugar_detencion_secuestro &lt;chr&gt;,
-## #   fecha_asesinato_o_hallazgo_de_restos &lt;chr&gt;, …</code></pre>
-<p>Filtramos para indagar en la cantidad de victimas de nacionalidad
-argentina.</p>
+## #   lugar_detencion_secuestro &lt;chr&gt;, …</code></pre>
+<p>Vamos a indagar sobre la cantidad de desaparecidos según la provincia
+de nacimiento en valores absolutos y porcentajes.</p>
+<pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
+ group_by(provincia_nacimiento)|&gt;
+  summarise(n=n())|&gt;
+  mutate(porcentaje = n/sum(n)*100)</code></pre>
+<pre><code>## # A tibble: 27 × 3
+##    provincia_nacimiento     n porcentaje
+##    &lt;chr&gt;                &lt;int&gt;      &lt;dbl&gt;
+##  1 BUENOS AIRES          2056     23.5  
+##  2 CAPITAL FEDERAL       2054     23.5  
+##  3 CATAMARCA               42      0.480
+##  4 CHACO                  117      1.34 
+##  5 CHUBUT                  31      0.354
+##  6 CORDOBA                716      8.18 
+##  7 CORRIENTES             147      1.68 
+##  8 ENTRE RIOS             269      3.07 
+##  9 FORMOSA                 40      0.457
+## 10 JUJUY                   88      1.01 
+## # ℹ 17 more rows</code></pre>
+<p>Vamos a contar según el motivo de la denuncia formal.</p>
 <pre class="r"><code># Cödigo de R acá 
 
 victimas_accionar_represivo_ilegal|&gt;
-  filter(nacionalidad == &quot;ARGENTINA&quot;)|&gt;
-  count(nacionalidad == &quot;ARGENTINA&quot;)</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `nacionalidad == &quot;ARGENTINA&quot;`     n
-##   &lt;lgl&gt;                         &lt;int&gt;
-## 1 TRUE                           8172</code></pre>
-<pre class="r"><code># Agregá más bloques según sea necesario</code></pre>
+  group_by(tipificacion_ruvte)|&gt;
+  count()</code></pre>
+<pre><code>## # A tibble: 38 × 2
+## # Groups:   tipificacion_ruvte [38]
+##    tipificacion_ruvte                                                          n
+##    &lt;chr&gt;                                                                   &lt;int&gt;
+##  1 ASESINATO                                                                1506
+##  2 ASESINATO / EXHUMADOS E IDENTIFICADOS SUS RESTOS                           33
+##  3 ASESINATO / INVESTIGADO EN CAUSA JUDICIAL                                   9
+##  4 ASESINATO / PROBADO EN CAUSA JUDICIAL                                      18
+##  5 ASESINATO / PROCEDENTE POR ACTO ADMINISTRATIVO EN APLICACION DE ART. 6…     1
+##  6 ASESINATO / PROCEDENTE POR APLICACION DE ART. 6º DE LA LEY 24.823          31
+##  7 ASESINATO / PROCEDENTE POR RESOLUCION JUDICIAL                              2
+##  8 DESAPARICION FORZADA                                                     6054
+##  9 DESAPARICION FORZADA (NIÑA) / EXHUMADOS E IDENTIFICADOS SUS RESTOS          1
+## 10 DESAPARICION FORZADA (NIÑO) / EXHUMADOS E IDENTIFICADOS SUS RESTOS          1
+## # ℹ 28 more rows</code></pre>
 <p>Realizamos un filtro para indagar la cantidad de victimas por
 desaparición forzada.</p>
+<p>Vamos a calcular cuantas victimas desaparecidas estaban embarazadas
+al momento de su desaparición.</p>
 <pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  count(tipificacion_ruvte == &quot;DESAPARICION FORZADS&quot;)</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   `tipificacion_ruvte == &quot;DESAPARICION FORZADS&quot;`     n
-##   &lt;lgl&gt;                                          &lt;int&gt;
-## 1 FALSE                                           8753</code></pre>
+  filter(embarazo == &quot;EMBARAZADA&quot;)|&gt;
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1   284</code></pre>
 <p>Ahora vamos a filtrar cuantos restos de desaparecidos fueron
 hallados.</p>
+<p>pongo !is.na para contar lo que no son na.</p>
 <pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
-  select(fecha_asesinato_o_hallazgo_de_restos)</code></pre>
-<pre><code>## # A tibble: 8,753 × 1
-##    fecha_asesinato_o_hallazgo_de_restos
-##    &lt;chr&gt;                               
-##  1 &lt;NA&gt;                                
-##  2 &lt;NA&gt;                                
-##  3 &lt;NA&gt;                                
-##  4 21/10/1976                          
-##  5 &lt;NA&gt;                                
-##  6 &lt;NA&gt;                                
-##  7 21/10/1976                          
-##  8 &lt;NA&gt;                                
-##  9 &lt;NA&gt;                                
-## 10 &lt;NA&gt;                                
-## # ℹ 8,743 more rows</code></pre>
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|&gt;
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1  2412</code></pre>
+<p>Promedio de los años de denuncia</p>
+<pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
+  summarise(mean(anio_denuncia))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   `mean(anio_denuncia)`
+##                   &lt;dbl&gt;
+## 1                 1988.</code></pre>
+<pre class="r"><code>#col &lt;- suppressWarnings(as.integer(gsub(&#39;[a-zA-Z]&#39;, &#39;&#39;, victimas_accionar_represivo_ilegal$edad_al_momento_del_hecho)))
+#summarise(col)</code></pre>
 </div>
 <div id="hipótesis" class="section level2">
 <h2>Hipótesis</h2>
 <p>Como primera hipótesis exploratoria, sostenemos que la mayoría de las
-victima del accionar represivo ilegal fueron secuestradas en grandes
-centros urbanos tales como Buenos Aires, Córdoba y Santa Fe y eran en su
-mayoría jóvenes menores de 30 años al momento de la detención. En
-segundo lugar, también sostenemos que la mayor parte de las denuncias
-formales se realizaron en el año 1984. Por último, creemos que, en menos
-del 10% de las denuncias fueron hallados los restos o determinado la
-fecha del asesinato.</p>
+victimas del accionar represivo ilegal eran de nacionalidad argentina,
+nacieron en grandes centros urbanos tales como Buenos Aires y Capital
+Federal, eran en su mayoría jóvenes menores de 30 años al momento de la
+detención. En segundo lugar, también sostenemos que la mayoría fue
+victima de desaparición forzada y que menos de la mitad de las víctimas
+denunciadas como desaparecidas fueron halladas.</p>
 </div>
 
 

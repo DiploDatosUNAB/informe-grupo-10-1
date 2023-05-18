@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(presentes)
 library(dplyr)
 library(readr)
+library(tidyr)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 
 ```
@@ -32,7 +33,7 @@ La base de datos cuenta con cinco conjunto de datos:
 
 De las cinco bases de datos, seleccionaremos en principio la base titulada "victimas del accionar represivo ilegal".Esta base de datos cuenta con un total de 20 columnas con 8753 entradas. En las columnas podemos encontrar los siguientes temas o variables: id_unico_rouvte, anio_denuncia, tipificacion_ruvte, apellido_paterno_nombres, apellido_materno, apellido_casada, edad_al_momento_del_hecho, documentos, anio_nacimiento, provincia_nacimiento, pais_nacimiento, nacionalidad, embarazo, fecha_detencion_secuestro, lugar_detencion_secuestro,fecha_asesinato_o_hallazgos_de_restos, lugar_asesinato_o_hallazgos_de_restos, fotografia, provincia_nacimiento_indec_id y pais_nacimiento_indec_id. 
 
-En la primera exploración de los datos nos concetraremos sobre todo en algunas columnas tales como la nacionalidad, el año de detención, el año de denuncia, el tipo de delito del que fue víctima, la provincia de detención. 
+En la primera exploración de los datos nos concetraremos sobre todo en algunas columnas tales como la nacionalidad, el lugar de detención, el año de denuncia, el tipo de delito del que fue víctima, la provincia de origen. 
 
 ## Exploración de los datos
 
@@ -40,121 +41,95 @@ vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 
 Primero vamos filtrando para acercarnos a los datos. 
 
-
-Filtramos el lugar de detención/secuestro. 
-
+Primero contamos cuantas victimas hay de nacionalidad argentina y menores a 30 años. 
 ```{r}
-victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro %in% "BUENOS AIRES")|>
-  group_by(lugar_detencion_secuestro %in% "BUENOS AIRES")|>
-   summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
 
-```
-```{r}
 victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro %in% "CORDOBA")|>
-  group_by(lugar_detencion_secuestro %in% "CORDOBA")|>
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+  count(nacionalidad == "ARGENTINA", edad_al_momento_del_hecho <=30)
+  
   
 
+
 ```
 
 ```{r}
+ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro %in% "MENDOZA")|>
-  group_by(lugar_detencion_secuestro %in% "MENDOZA")|>
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
+  filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)
 ```
+
+
+
+
+Vamos a indagar sobre la cantidad de desaparecidos según la provincia de nacimiento en valores absolutos y porcentajes. 
 ```{r}
-victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro %in% "SANTA FE")|>
-  group_by(lugar_detencion_secuestro %in% "SANTA FE")|>
-  summarise(promedio = mean(anio_denuncia, na.rm = TRUE))
-```
-
-
-```{r}
-# Código para cargar o leer los datos
 
 victimas_accionar_represivo_ilegal|>
-  group_by(anio_denuncia, anio_nacimiento, edad_al_momento_del_hecho)
-
+ group_by(provincia_nacimiento)|>
+  summarise(n=n())|>
+  mutate(porcentaje = n/sum(n)*100)
 
 ```
 
-Filtramos para indagar en la cantidad de victimas de nacionalidad argentina. 
-
+Vamos a contar según el motivo de la denuncia formal. 
 ```{r}
 # Cödigo de R acá 
 
 victimas_accionar_represivo_ilegal|>
-  filter(nacionalidad == "ARGENTINA")|>
-  count(nacionalidad == "ARGENTINA")
+  group_by(tipificacion_ruvte)|>
+  count()
 
-
-
-# Agregá más bloques según sea necesario
 ```
+
+
+
+
+
 
 
 Realizamos un filtro para indagar la cantidad de victimas por desaparición forzada.
 
 ```{r}
 
-victimas_accionar_represivo_ilegal|>
-  count(tipificacion_ruvte == "DESAPARICION FORZADS")
+
+
   
 ```
 
-Ahora vamos a filtrar cuantos restos de desaparecidos fueron hallados. 
+Vamos a calcular cuantas victimas desaparecidas estaban embarazadas al momento de su desaparición. 
 ```{r}
 victimas_accionar_represivo_ilegal|>
-  select(fecha_asesinato_o_hallazgo_de_restos)
+  filter(embarazo == "EMBARAZADA")|>
+  count()
+```
+
+
+
+Ahora vamos a filtrar cuantos restos de desaparecidos fueron hallados. 
+
+pongo !is.na para contar lo que no son na.
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
+  count()
 
 ```
 
-Filtrar según centros urbanos de lugar de victimas de represion ilegal 
+
+
+Promedio de los años de denuncia
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  summarise(mean(anio_denuncia))
+
+```
 
 ```{r}
 
-filter(victimas_accionar_represivo_ilegal, lugar_detencion_secuestro == "BUENOS AIRES"|lugar_detencion_secuestro == "SANTA FE"| lugar_detencion_secuestro == "CAPITAL FEDERAL")
-
-
+#col <- suppressWarnings(as.integer(gsub('[a-zA-Z]', '', victimas_accionar_represivo_ilegal$edad_al_momento_del_hecho)))
+#summarise(col)
 ```
-
-Desaparecidos menores a 30 años
-
-```{r}
-
-filter(victimas_accionar_represivo_ilegal, edad_al_momento_del_hecho_numerico <=30)
-
-```
-
-mediana de las denuncias de 1984
-
-```{r}
-denuncias_1984 <-
-filter(victimas_accionar_represivo_ilegal, anio_denuncia == "1984") 
-media_denuncias <- mean(denuncias_1984)
-
-```
-
-
-
-
-```
-
-porcentaje de de cuantos fueron hallados o fallecidos
-
-este no entendi como seria?
-
-```{r}
-
-```
-
-
-
-
 
 
 
@@ -162,4 +137,4 @@ este no entendi como seria?
 
 ## Hipótesis
 
-Como primera hipótesis exploratoria, sostenemos que la mayoría de las victima del accionar represivo ilegal fueron secuestradas en grandes centros urbanos tales como Buenos Aires, Córdoba y Santa Fe y eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayor parte de las denuncias formales se realizaron en el año 1984. Por último, creemos que, en menos del 10% de las denuncias fueron hallados los restos o determinado la fecha del asesinato.  
+Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas del accionar represivo ilegal eran de nacionalidad argentina, nacieron en grandes centros urbanos tales como Buenos Aires y Capital Federal, eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayoría fue victima de desaparición forzada y que menos de la mitad de las víctimas denunciadas como desaparecidas fueron halladas.  
