@@ -13,7 +13,10 @@ library(presentes)
 library(dplyr)
 library(readr)
 library(tidyr)
+library(ggplot2)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
+centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
+
 
 ```
 
@@ -46,8 +49,6 @@ Primero contamos cuantas victimas hay de nacionalidad argentina y menores a 30 a
 
 victimas_accionar_represivo_ilegal|>
   count(nacionalidad == "ARGENTINA", edad_al_momento_del_hecho <=30)
-  
-  
 
 
 ```
@@ -56,6 +57,16 @@ victimas_accionar_represivo_ilegal|>
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
   filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)
+```
+
+Vamos a graficar la tabla anterior sobre las personas secuestradas en grandes centros urbanos. 
+
+```{r}
+ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
+victimas_accionar_represivo_ilegal|>
+  filter(grepl("BUENOS AIRES|CORDOBA|MENDOZA|SANTA FE|CAPITAL FEDERAL", lugar_detencion_secuestro))|>
+  summarise(n=n())
+  
 ```
 
 
@@ -70,6 +81,18 @@ victimas_accionar_represivo_ilegal|>
   mutate(porcentaje = n/sum(n)*100)
 
 ```
+
+Ahora vamos a presentar estos datos en un gráfico.
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+ group_by(provincia_nacimiento)|>
+  summarise(n=n())|>
+  ggplot(aes(n,provincia_nacimiento))+
+  geom_bar(stat = "identity")
+  
+```
+
 
 Vamos a contar según el motivo de la denuncia formal. 
 ```{r}
@@ -90,8 +113,9 @@ victimas_accionar_represivo_ilegal|>
 Realizamos un filtro para indagar la cantidad de victimas por desaparición forzada.
 
 ```{r}
-
-
+victimas_accionar_represivo_ilegal|>
+  filter(tipificacion_ruvte == "DESAPARICION FORZADA")|>
+  count()
 
   
 ```
@@ -138,3 +162,26 @@ victimas_accionar_represivo_ilegal|>
 ## Hipótesis
 
 Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas del accionar represivo ilegal eran de nacionalidad argentina, nacieron en grandes centros urbanos tales como Buenos Aires y Capital Federal, eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayoría fue victima de desaparición forzada y que menos de la mitad de las víctimas denunciadas como desaparecidas fueron halladas.  
+
+
+##Modificación de hipótesis y agregado de nuevos datos
+
+Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos para incorporar al análisis. Por eso mismo vamos a incorporar los datos del censo de 1970 realizado en la República Argentina. 
+La hipótesis es que la tasa de desaparecidos
+ 
+
+```{r}
+total_poblacion_prov_nac|>
+  summarise("Capital Federal","Partidos del Gran Buenos Aires", "Resto de Buenos Aires", "Mendoza", "Córdoba", "Santa Fe")
+
+
+
+```
+```{r}
+centros_clandestinos_detencion|>
+  group_by(lugar_emplazamiento_propiedad)|>
+  summarise(n=n())
+
+
+```
+
