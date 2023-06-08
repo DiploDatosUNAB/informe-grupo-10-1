@@ -204,6 +204,7 @@ victimas_accionar_represivo_ilegal|>
 Luego de realizar una limpieza de datos, hemos podido establecer que el promedio de edad de las victimas de represión ilegal es de 28,4 años. 
 
 
+
 Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
 
 ```{r}
@@ -216,10 +217,10 @@ victimas_accionar_represivo_ilegal|>
 
 ```
 
+Según lo observado, la mayoría de los niños nacieron en cautiverio, 47 bebes. Mientras que 17 bebes tenían 1 año.  
 
-Años promedios de hallazgos de restos
 
-
+En función de los datos, podemos observar que hay un total de 2412 victimas que fueron encontradas, ya que poseen una fecha de hallazgos de restos. 
 
 ```{r}
 victimas <- victimas_accionar_represivo_ilegal|>
@@ -235,8 +236,8 @@ victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
   count()|>
-  ggplot(aes(fecha_asesinato_o_hallazgo_de_restos, n))+
-  geom_curve()
+  ggplot()+
+  geom_point(aes(fecha_asesinato_o_hallazgo_de_restos, n))
 
 
 
