@@ -176,7 +176,7 @@ Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos par
 La hipótesis es que la tasa de desaparecidos
 
 
-Desaparecidos de acuerdo a la cantidad de población por provincias
+Desaparecidos de acuerdo a la cantidad de población por provincias.
 
 ```{r}
 total_poblacion = 23390050
@@ -190,11 +190,18 @@ print(tasa_desaparecidos(total_victimas, total_poblacion))
 
 ```
 
+Tal como podemos observar, según los datos y en función del censo nacional de población de 1970, hay constancia de denuncia formal de 0,0004 desaparecidos por cada persona.
+
+
+
+
 ```{r}
 victimas_accionar_represivo_ilegal|>
   mutate(edad = stringr:: str_remove(edad_al_momento_del_hecho, "años"))|>
   summarise(mean(as.numeric(edad), na.rm = TRUE))
 ```
+
+Luego de realizar una limpieza de datos, hemos podido establecer que el promedio de edad de las victimas de represión ilegal es de 28,4 años. 
 
 
 Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
@@ -216,11 +223,9 @@ Años promedios de hallazgos de restos
 
 ```{r}
 victimas <- victimas_accionar_represivo_ilegal|>
-  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))
-for (i in 1:nrow(victimas)) {
-  print(victimas[i,])
-  
-}
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
+  group_by(fecha_asesinato_o_hallazgo_de_restos)
+print(victimas)
 
 ```
 
@@ -231,7 +236,7 @@ victimas_accionar_represivo_ilegal|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
   count()|>
   ggplot(aes(fecha_asesinato_o_hallazgo_de_restos, n))+
-  geom_col(color=n)
+  geom_curve()
 
 
 
