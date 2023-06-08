@@ -14,6 +14,7 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
+library(stringr)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
 
@@ -56,10 +57,11 @@ victimas_accionar_represivo_ilegal|>
 ```{r}
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
-  filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)
+  filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)|>
+  count()
 ```
 
-Vamos a graficar la tabla anterior sobre las personas secuestradas en grandes centros urbanos. 
+Vamos a calcular la cantidad de personas secuestradas en grandes centros urbanos. 
 
 ```{r}
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
@@ -69,6 +71,9 @@ victimas_accionar_represivo_ilegal|>
   
 ```
 
+```{r}
+data_poblacion <- data_frame(detenidos_centros_urbanos=6316, detenidos_jovenes = 1353, desaparicion_forzada =6054, embarazada= 284) 
+```
 
 
 
@@ -100,25 +105,12 @@ Vamos a contar según el motivo de la denuncia formal.
 
 victimas_accionar_represivo_ilegal|>
   group_by(tipificacion_ruvte)|>
-  count()
+  count()|>
+  arrange(desc(n))
 
 ```
 
 
-
-
-
-
-
-Realizamos un filtro para indagar la cantidad de victimas por desaparición forzada.
-
-```{r}
-victimas_accionar_represivo_ilegal|>
-  filter(tipificacion_ruvte == "DESAPARICION FORZADA")|>
-  count()
-
-  
-```
 
 Vamos a calcular cuantas victimas desaparecidas estaban embarazadas al momento de su desaparición. 
 ```{r}
@@ -170,13 +162,7 @@ Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos par
 La hipótesis es que la tasa de desaparecidos
  
 
-```{r}
-total_poblacion_prov_nac|>
-  summarise("Capital Federal","Partidos del Gran Buenos Aires", "Resto de Buenos Aires", "Mendoza", "Córdoba", "Santa Fe")
 
-
-
-```
 ```{r}
 centros_clandestinos_detencion|>
   group_by(lugar_emplazamiento_propiedad)|>
