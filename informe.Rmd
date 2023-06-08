@@ -15,6 +15,7 @@ library(readr)
 library(tidyr)
 library(ggplot2)
 library(stringr)
+library(lubridate)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
 
@@ -55,6 +56,8 @@ victimas_accionar_represivo_ilegal|>
 ```
 
 ```{r}
+
+jovenes_grandes_ciudades = 1353
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
   filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)|>
@@ -114,6 +117,7 @@ victimas_accionar_represivo_ilegal|>
 
 Vamos a calcular cuantas victimas desaparecidas estaban embarazadas al momento de su desaparición. 
 ```{r}
+total_embarazadas =284
 victimas_accionar_represivo_ilegal|>
   filter(embarazo == "EMBARAZADA")|>
   count()
@@ -175,16 +179,63 @@ La hipótesis es que la tasa de desaparecidos
 Desaparecidos de acuerdo a la cantidad de población por provincias
 
 ```{r}
+total_poblacion = 23390050
+total_victimas = 8753
+
+tasa_desaparecidos <-function(total_victimas, total_poblacion){
+total_victimas / total_poblacion   
+}
+print(tasa_desaparecidos(total_victimas, total_poblacion))
+
+
+```
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  mutate(edad = stringr:: str_remove(edad_al_momento_del_hecho, "años"))|>
+  summarise(mean(as.numeric(edad), na.rm = TRUE))
+```
+
+
+Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(edad_al_momento_del_hecho <= 15)|>
+  group_by(edad_al_momento_del_hecho)|>
+  count()|>
+  arrange(desc(n))
+
 
 ```
 
 
 Años promedios de hallazgos de restos
 
+
+
 ```{r}
-#victimas_accionar_represivo_ilegal|>
-  #if{
-    #fecha_asesinato_hallazgos_restos == !is.na  } #else {summarise(mean())}
+victimas <- victimas_accionar_represivo_ilegal|>
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))
+for (i in 1:nrow(victimas)) {
+  print(victimas[i,])
+  
+}
+
+```
+
+
+```{r}
+victimas_accionar_represivo_ilegal|>
+  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
+  group_by(fecha_asesinato_o_hallazgo_de_restos)|>
+  count()|>
+  ggplot(aes(fecha_asesinato_o_hallazgo_de_restos, n))+
+  geom_col(color=n)
+
+
+
+
 ```
 
 
@@ -192,7 +243,9 @@ Años promedios de hallazgos de restos
 ```{r}
 centros_clandestinos_detencion|>
   group_by(lugar_emplazamiento_propiedad)|>
-  summarise(n=n())
+  summarise(n=n())|>
+  ggplot(aes(n, lugar_emplazamiento_propiedad))+
+  geom_bar(stat = "identity")
 
 
 ```
