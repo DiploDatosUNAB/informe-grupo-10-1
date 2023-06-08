@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Cargar los paquetes necesarios acá
 
 library(presentes)
+library(readxl)
 library(dplyr)
 library(readr)
 library(tidyr)
@@ -19,6 +20,7 @@ library(stringr)
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
 
+total_poblacion_prov_nac <- read_excel("datos/total-poblacion-prov-nac.xls")
 
 ```
 
@@ -176,6 +178,9 @@ Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos par
 La hipótesis es que la tasa de desaparecidos
 
 
+
+##Tasa de desaparecidos de acuerdo al censo nacional de población de 1970
+
 Desaparecidos de acuerdo a la cantidad de población por provincias.
 
 ```{r}
@@ -266,9 +271,9 @@ print(victimas)
 victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
-  count()|>
-ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
-  geom_point(aes(colors()))
+  count()
+#ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
+  #geom_point(aes(colors()))
   
 
 ```
