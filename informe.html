@@ -429,11 +429,6 @@ victimas_accionar_represivo_ilegal|&gt;
 ##   &lt;int&gt;
 ## 1  6316</code></pre>
 <pre class="r"><code>data_poblacion &lt;- data_frame(detenidos_centros_urbanos=6316, detenidos_jovenes = 1353, desaparicion_forzada =6054, embarazada= 284) </code></pre>
-<pre><code>## Warning: `data_frame()` was deprecated in tibble 1.1.0.
-## ℹ Please use `tibble()` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
 <p>Vamos a indagar sobre la cantidad de desaparecidos según la provincia
 de nacimiento en valores absolutos y porcentajes.</p>
 <pre class="r"><code>victimas_accionar_represivo_ilegal|&gt;
@@ -512,8 +507,8 @@ hallados.</p>
 <pre class="r"><code>#col &lt;- suppressWarnings(as.integer(gsub(&#39;[a-zA-Z]&#39;, &#39;&#39;, victimas_accionar_represivo_ilegal$edad_al_momento_del_hecho)))
 #summarise(col)</code></pre>
 </div>
-<div id="hipótesis" class="section level2">
-<h2>Hipótesis</h2>
+<div id="hipótesis-previo-a-la-exploración-de-los-datos" class="section level2">
+<h2>Hipótesis previo a la exploración de los datos</h2>
 <p>Como primera hipótesis exploratoria, sostenemos que la mayoría de las
 victimas del accionar represivo ilegal eran de nacionalidad argentina,
 nacieron en grandes centros urbanos tales como Buenos Aires y Capital
@@ -521,11 +516,52 @@ Federal, eran en su mayoría jóvenes menores de 30 años al momento de la
 detención. En segundo lugar, también sostenemos que la mayoría fue
 victima de desaparición forzada y que menos de la mitad de las víctimas
 denunciadas como desaparecidas fueron halladas.</p>
+<p>#Análisis de la exploración inicial de los datos</p>
+<p>En una primera gran exploración de los datos, hemos podido observar
+que la mayoría de las personas fueron secuestradas en grandes centros
+urbanos tales como la Capital Federal, la provincia de Buenos Aires,
+Santa Fe, Mendoza y Córdoba representando un valor de 6316 sobre un
+total de 8753. En principio esto confirma las impresiones iniciales
+sobre la dictadura militar ya que corrobora que los hechos de represión
+ilegal fueron mayores en cantidades nominales en estas ciudades. También
+hemos podido corroborar que la mayoría de las víctimas eran personas
+jóvenes mayores a 30 años y que un 3,2% de las víctimas eran mujeres que
+cursaban un embarazo. Y, además, aunque esto no es muy popular
+existieron víctimas que no eran de nacionalidad argentina. En las
+denuncias aparece como motivo la desaparición forzada, siendo esta la
+causa principal de denuncia, aunque también aparecen otros como el
+asesinato. Sin embargo, aquí la base de datos posee la particularidad de
+que exhibe las diferentes causas de denuncia, enumerandolas, lo cual
+hace dificil la aplicación de una sola categoría. Para ello habría que
+proceder a una limpieza de datos. También hemos podido establecer que el
+27,5% (2412) victimas fueron halladas o poseen datos certeros de la
+fecha de asesinato o del hallazgo de restos. observamos que, en el clima
+de la recuperación de la democracia y los primeros juicios a las juntas
+militares, se ubica el año promedio de denuncias de los cuales son
+recuperados los datos. En función de estos datos es que surgen las
+siguientes preguntas:</p>
+<p>¿Qué porcentaje de victimas existieron en función de los datos
+poblacionales? De las víctimas que fueron encontradas, ¿cuál es el
+promedio de años o el rango de años en los que fueron halladas? ¿el
+hallazgo se realizó durante el gobierno de facto o fue posterior?</p>
+<p>Las víctimas denunciadas que eran niños, ¿fueron restituidos? También
+cabe preguntar sí es que las fechas de detención o secuestro de las
+víctimas se dieron en los primeros años ya que la bibliografía existente
+sobre el tema sostiene que el gobierno de facto ejerció mayor cantidad
+de violencia hasta el año 1979. ¿es esto soportado por los datos? ¿se
+puede observar una linea de tendencia en la cantidad de personas
+desaparecidas según años?</p>
 <p>##Modificación de hipótesis y agregado de nuevos datos</p>
 <p>Luego de las primeras observaciones, vamos a empezar a explorar
 nuevos datos para incorporar al análisis. Por eso mismo vamos a
 incorporar los datos del censo de 1970 realizado en la República
 Argentina. La hipótesis es que la tasa de desaparecidos</p>
+<p>Desaparecidos de acuerdo a la cantidad de población por
+provincias</p>
+<p>Años promedios de hallazgos de restos</p>
+<pre class="r"><code>#victimas_accionar_represivo_ilegal|&gt;
+  #if{
+    #fecha_asesinato_hallazgos_restos == !is.na  } #else {summarise(mean())}</code></pre>
 <pre class="r"><code>centros_clandestinos_detencion|&gt;
   group_by(lugar_emplazamiento_propiedad)|&gt;
   summarise(n=n())</code></pre>
