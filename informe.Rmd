@@ -205,6 +205,8 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
 
 
 
+#MAPA DE CENTROS CLANDESTINOS
+
 
 ```{r}
 victimas_accionar_represivo_ilegal|>
@@ -247,8 +249,9 @@ victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
   count()|>
-  ggplot()+
-  geom_point(aes(fecha_asesinato_o_hallazgo_de_restos, n))
+ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
+  geom_point(aes(colors()))
+  
 
 
 
