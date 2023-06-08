@@ -141,11 +141,7 @@ victimas_accionar_represivo_ilegal|>
 
 ```
 
-```{r}
 
-#col <- suppressWarnings(as.integer(gsub('[a-zA-Z]', '', victimas_accionar_represivo_ilegal$edad_al_momento_del_hecho)))
-#summarise(col)
-```
 
 ## Hipótesis previo a la exploración de los datos
 
