@@ -83,7 +83,7 @@ data_poblacion <- data_frame(detenidos_centros_urbanos=6316, detenidos_jovenes =
 Vamos a indagar sobre la cantidad de desaparecidos según la provincia de nacimiento en valores absolutos y porcentajes. 
 ```{r}
 
-victimas_accionar_represivo_ilegal|>
+victima_provincias <- victimas_accionar_represivo_ilegal|>
  group_by(provincia_nacimiento)|>
   summarise(n=n())|>
   mutate(porcentaje = n/sum(n)*100)
@@ -191,6 +191,17 @@ print(tasa_desaparecidos(total_victimas, total_poblacion))
 ```
 
 Tal como podemos observar, según los datos y en función del censo nacional de población de 1970, hay constancia de denuncia formal de 0,0004 desaparecidos por cada persona.
+
+
+```{r}
+victima_provincias <- victimas_accionar_represivo_ilegal|>
+ group_by(provincia_nacimiento)|>
+  summarise(n=n())|>
+  mutate(porcentaje = n/sum(n)*100)|>
+  full_join(total_poblacion_prov_nac, by = "provincia_nacimiento")
+
+
+```
 
 
 
