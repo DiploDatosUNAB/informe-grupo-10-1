@@ -15,7 +15,7 @@ library(readr)
 library(tidyr)
 library(ggplot2)
 library(stringr)
-library(lubridate)
+
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
 
