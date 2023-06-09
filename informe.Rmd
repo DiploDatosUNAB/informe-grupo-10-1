@@ -7,7 +7,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# Cargar los paquetes necesarios acá
 
 library(presentes)
 library(readxl)
@@ -16,7 +15,6 @@ library(readr)
 library(tidyr)
 library(ggplot2)
 library(stringr)
-library(sf)
 
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
@@ -26,7 +24,9 @@ total_poblacion_prov_nac <- read_excel("datos/total-poblacion-prov-nac.xls")
 ```
 
 
-## Introducción
+## **INTORDUCCIÓN**
+
+<div style="text-align: justify">
 
 En este trabajo práctico vamos a analizar los datos titulados Desaparecidos. Este conjunto de datos facilita el acceso a los registros estatales de las personas desaparecidas en la última dictadura militar argentina desarrollada entre el 24 de marzo de 1976 y el 10 de diciembre de 1983. 
 Los datos fueron obtenidos por Diego Kozlowski. Según la información presente en el repositorio, provienen del Registro Único de Víctimas del Terrorismo de Estado (RUVTE) dependiente de la Secretaría de Derechos Humanos y Pluralismo Cultural del Ministerio de Justicia y Derechos Humanos de la Nación, creado por Resolución 1261/2014 de dicho Ministerio (https://datos.gob.ar/dataset/justicia-registro-unificado-victimas-terrorismo-estado--ruvte-). En segundo lugar, el Monumento a las Víctimas del Terrorismo de Estado, realizado por el Consejo de Gestión del Parque de la Memoria y del Monumento a las Víctimas del Terrorismo de Estado, creado por la ley 3078 de la Ciudad de Buenos Aires (http://basededatos.parquedelamemoria.org.ar/). Ambos registros recogen información de víctimas asesinadas o detenidas/desaparecidas aún antes de la fecha del inicio formal del golpe de estado militar.
@@ -43,7 +43,7 @@ De las cinco bases de datos, seleccionaremos en principio la base titulada "vict
 
 En la primera exploración de los datos nos concetraremos sobre todo en algunas columnas tales como la nacionalidad, el lugar de detención, el año de denuncia, el tipo de delito del que fue víctima, la provincia de origen. 
 
-## Exploración de los datos
+## **EXPLORACIÓN DE LOS DATOS**
 
 vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 
@@ -65,6 +65,7 @@ ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL"
 victimas_accionar_represivo_ilegal|>
   filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)|>
   count()
+      
 ```
 
 Vamos a calcular la cantidad de personas secuestradas en grandes centros urbanos. 
@@ -107,7 +108,6 @@ victimas_accionar_represivo_ilegal|>
 
 Vamos a contar según el motivo de la denuncia formal. 
 ```{r}
-# Cödigo de R acá 
 
 victimas_accionar_represivo_ilegal|>
   group_by(tipificacion_ruvte)|>
@@ -150,12 +150,12 @@ victimas_accionar_represivo_ilegal|>
 
 
 
-## Hipótesis previo a la exploración de los datos
+## **HIPÓTESIS PREVIO A LA EXPLOTACIÓN DE LOS DATOS**
 
 Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas del accionar represivo ilegal eran de nacionalidad argentina, nacieron en grandes centros urbanos tales como Buenos Aires y Capital Federal, eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayoría fue victima de desaparición forzada y que menos de la mitad de las víctimas denunciadas como desaparecidas fueron halladas.  
 
 
-##Análisis de la exploración inicial de los datos
+##**Análisis de la exploración inicial de los datos**
 
 En una primera gran exploración de los datos, hemos podido observar que la mayoría de las personas fueron secuestradas en grandes centros urbanos tales como la Capital Federal, la provincia de Buenos Aires, Santa Fe, Mendoza y Córdoba representando un valor de 6316 sobre un total de 8753. En principio esto confirma las impresiones iniciales sobre la dictadura militar ya que corrobora que los hechos de represión ilegal fueron mayores en cantidades nominales en estas ciudades. 
 También hemos podido corroborar que la mayoría de las víctimas eran personas jóvenes mayores a 30 años y que un 3,2% de las víctimas eran mujeres que cursaban un embarazo. Y, además, aunque esto no es muy popular existieron víctimas que no eran de nacionalidad argentina. 
@@ -173,14 +173,14 @@ También cabe preguntar sí es que las fechas de detención o secuestro de las v
 
 
 
-##Modificación de hipótesis y agregado de nuevos datos
+##**Modificación de hipótesis y agregado de nuevos datos**
 
 Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos para incorporar al análisis. Por eso mismo vamos a incorporar los datos del censo de 1970 realizado en la República Argentina. 
 La hipótesis es que la tasa de desaparecidos
 
 
 
-##Tasa de desaparecidos de acuerdo al censo nacional de población de 1970
+##**Tasa de desaparecidos de acuerdo al censo nacional de población de 1970**
 
 Desaparecidos de acuerdo a la cantidad de población por provincias.
 
@@ -213,14 +213,13 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
 Tal como podemos observar en la tabla victimas_provincia, si evaluamos en relación a la población del censo de 1970, el porcentaje de desaparecidos por provincia se modifica. Tucuman representa la provincia con mayor proporción de desaparecidos con un valor de 0,074% y en segundo lugar se encuentra Capital Federal con un valor de 0,069%. Luego, se ubica la provincia de Buenos Aires con un 0,040 seguido por la provincia de Tierra del Fuego con un valor de 0,037. Esto sucede debido a la baja densidad poblacional de la provincia austral. Seguidamente encontramos a Córdoba con un valor de 0,034. Lo llamativo es el sexto lugar ocupado por la provincia de Jujuy con una distancia de 3 puntos porcentuales de Córdoba. 
 Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes con valores de 0,012 y 0,016 respectivamente. 
 
-#MAPA DE CENTROS CLANDESTINOS
+#**MAPA DE CENTROS CLANDESTINOS** (FALTARIA MAPA DE ARGENTINA)
 
 ```{r}
 
-
-
-
-
+centros_clandestinos_detencion|>
+    ggplot(aes(lon,lat)) +
+     geom_point()
 
 
 ```
@@ -228,9 +227,7 @@ Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes
 
 
 
-
-
-##Promedio de edad de los desaparecidos 
+##**Promedio de edad de los desaparecidos** 
 
 ```{r}
 victimas_accionar_represivo_ilegal|>
@@ -244,7 +241,7 @@ Luego de realizar una limpieza de datos, hemos podido establecer que el promedio
 
 
 
-##Recuento de cantidad de niños y niñas desaparecidxs
+##**Recuento de cantidad de niños y niñas desaparecidxs**
 
 Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
 
@@ -262,7 +259,7 @@ Según lo observado, la mayoría de los niños nacieron en cautiverio, 47 bebes.
 
 
 
-## Cantidad de victimas halladas
+## **Cantidad de victimas halladas**
 
 En función de los datos, podemos observar que hay un total de 2412 victimas que fueron encontradas, ya que poseen una fecha de hallazgos de restos. 
 
@@ -275,7 +272,7 @@ print(victimas)
 ```
 
 
-##Gráfico de la cantidad de víctimas según la fecha de hallazgo
+##**Gráfico de la cantidad de víctimas según la fecha de hallazgo**
 
 
 ```{r}
@@ -288,7 +285,6 @@ victimas_accionar_represivo_ilegal|>
   
 
 ```
-
 
 
 
