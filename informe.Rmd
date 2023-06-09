@@ -180,7 +180,7 @@ También cabe preguntar sí es que las fechas de detención o secuestro de las v
 **Modificación de hipótesis y agregado de nuevos datos**
 
 Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos para incorporar al análisis. Por eso mismo vamos a incorporar los datos del censo de 1970 realizado en la República Argentina. 
-La hipótesis es que la tasa de desaparecidos
+La hipótesis es que la tasa de desaparecidos segùn el censo nacional de poblaciòn de 1970 confirma que la mayor cantidad de desaparecidos se dieron en grandes centros urbanos donde funcionaron la mayor cantidad de centros clandestinos de detenciòn.
 
 
 
