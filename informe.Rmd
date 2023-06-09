@@ -16,6 +16,7 @@ library(readr)
 library(tidyr)
 library(ggplot2)
 library(stringr)
+library(sf)
 
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
@@ -212,11 +213,21 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
 Tal como podemos observar en la tabla victimas_provincia, si evaluamos en relación a la población del censo de 1970, el porcentaje de desaparecidos por provincia se modifica. Tucuman representa la provincia con mayor proporción de desaparecidos con un valor de 0,074% y en segundo lugar se encuentra Capital Federal con un valor de 0,069%. Luego, se ubica la provincia de Buenos Aires con un 0,040 seguido por la provincia de Tierra del Fuego con un valor de 0,037. Esto sucede debido a la baja densidad poblacional de la provincia austral. Seguidamente encontramos a Córdoba con un valor de 0,034. Lo llamativo es el sexto lugar ocupado por la provincia de Jujuy con una distancia de 3 puntos porcentuales de Córdoba. 
 Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes con valores de 0,012 y 0,016 respectivamente. 
 
-
-
-
-
 #MAPA DE CENTROS CLANDESTINOS
+
+```{r}
+
+
+
+
+
+
+
+```
+
+
+
+
 
 
 ##Promedio de edad de los desaparecidos 
