@@ -1,7 +1,9 @@
 ---
 title: "TP1-grupo10"
 author: "Andrea Ariza- Nestor Martinez"
-output: html_document
+output: 
+  html_document: 
+    theme: readable
 ---
 
 
