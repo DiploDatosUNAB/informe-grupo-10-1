@@ -6,8 +6,7 @@ output: html_document
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+knitr::opts_chunk$set(include = FALSE)
 library(presentes)
 library(readxl)
 library(dplyr)
@@ -50,7 +49,7 @@ vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 Primero vamos filtrando para acercarnos a los datos. 
 
 Primero contamos cuantas victimas hay de nacionalidad argentina y menores a 30 años. 
-```{r}
+```{r echo=FALSE}
 
 victimas_accionar_represivo_ilegal|>
   count(nacionalidad == "ARGENTINA", edad_al_momento_del_hecho <=30)
@@ -58,7 +57,7 @@ victimas_accionar_represivo_ilegal|>
 
 ```
 
-```{r}
+```{r echo=TRUE}
 
 jovenes_grandes_ciudades = 1353
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
@@ -70,7 +69,7 @@ victimas_accionar_represivo_ilegal|>
 
 Vamos a calcular la cantidad de personas secuestradas en grandes centros urbanos. 
 
-```{r}
+```{r echo=FALSE}
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
   filter(grepl("BUENOS AIRES|CORDOBA|MENDOZA|SANTA FE|CAPITAL FEDERAL", lugar_detencion_secuestro))|>
@@ -85,7 +84,7 @@ data_poblacion <- data_frame(detenidos_centros_urbanos=6316, detenidos_jovenes =
 
 
 Vamos a indagar sobre la cantidad de desaparecidos según la provincia de nacimiento en valores absolutos y porcentajes. 
-```{r}
+```{r echo=TRUE}
 
 victima_provincias <- victimas_accionar_represivo_ilegal|>
  group_by(provincia_nacimiento)|>
@@ -96,7 +95,7 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
 
 Ahora vamos a presentar estos datos en un gráfico.
 
-```{r}
+```{r echo=TRUE}
 victimas_accionar_represivo_ilegal|>
  group_by(provincia_nacimiento)|>
   summarise(n=n())|>
@@ -119,7 +118,7 @@ victimas_accionar_represivo_ilegal|>
 
 
 Vamos a calcular cuantas victimas desaparecidas estaban embarazadas al momento de su desaparición. 
-```{r}
+```{r echo=TRUE}
 total_embarazadas =284
 victimas_accionar_represivo_ilegal|>
   filter(embarazo == "EMBARAZADA")|>
@@ -131,7 +130,7 @@ victimas_accionar_represivo_ilegal|>
 Ahora vamos a filtrar cuantos restos de desaparecidos fueron hallados. 
 
 pongo !is.na para contar lo que no son na.
-```{r}
+```{r echo=FALSE}
 victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   count()
@@ -150,7 +149,7 @@ victimas_accionar_represivo_ilegal|>
 
 
 
-## **HIPÓTESIS PREVIO A LA EXPLOTACIÓN DE LOS DATOS**
+## **HIPÓTESIS PREVIA A LA EXPLORACIÓN DE LOS DATOS**
 
 Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas del accionar represivo ilegal eran de nacionalidad argentina, nacieron en grandes centros urbanos tales como Buenos Aires y Capital Federal, eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayoría fue victima de desaparición forzada y que menos de la mitad de las víctimas denunciadas como desaparecidas fueron halladas.  
 
@@ -184,7 +183,7 @@ La hipótesis es que la tasa de desaparecidos
 
 Desaparecidos de acuerdo a la cantidad de población por provincias.
 
-```{r}
+```{r echo=TRUE}
 total_poblacion = 23390050
 total_victimas = 8753
 
@@ -199,7 +198,7 @@ print(tasa_desaparecidos(total_victimas, total_poblacion))
 Tal como podemos observar, según los datos y en función del censo nacional de población de 1970, hay constancia de denuncia formal de 0,0004 desaparecidos por cada persona.
 
 
-```{r}
+```{r echo=FALSE}
 
 victima_provincias <- victimas_accionar_represivo_ilegal|>
  group_by(provincia_nacimiento)|>
@@ -245,7 +244,7 @@ Luego de realizar una limpieza de datos, hemos podido establecer que el promedio
 
 Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
 
-```{r}
+```{r echo=TRUE}
 victimas_accionar_represivo_ilegal|>
   filter(edad_al_momento_del_hecho <= 15)|>
   group_by(edad_al_momento_del_hecho)|>
@@ -263,7 +262,7 @@ Según lo observado, la mayoría de los niños nacieron en cautiverio, 47 bebes.
 
 En función de los datos, podemos observar que hay un total de 2412 victimas que fueron encontradas, ya que poseen una fecha de hallazgos de restos. 
 
-```{r}
+```{r echo=TRUE}
 victimas <- victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)
@@ -288,7 +287,7 @@ victimas_accionar_represivo_ilegal|>
 
 
 
-```{r}
+```{r echo=TRUE}
 centros_clandestinos_detencion|>
   group_by(lugar_emplazamiento_propiedad)|>
   summarise(n=n())|>
