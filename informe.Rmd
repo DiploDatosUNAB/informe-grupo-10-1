@@ -8,7 +8,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 library(presentes)
 library(readxl)
 library(dplyr)
@@ -16,6 +16,9 @@ library(readr)
 library(tidyr)
 library(ggplot2)
 library(stringr)
+library(lubridate)
+library(sf)
+library(tmap)
 
 victimas_accionar_represivo_ilegal <- presentes::victimas_accionar_represivo_ilegal
 centros_clandestinos_detencion <- presentes::centros_clandestinos_detencion
@@ -25,7 +28,7 @@ total_poblacion_prov_nac <- read_excel("datos/total-poblacion-prov-nac.xls")
 ```
 
 
-## **INTORDUCCIÓN**
+**INTRODUCCIÓN**
 
 <div style="text-align: justify">
 
@@ -44,7 +47,7 @@ De las cinco bases de datos, seleccionaremos en principio la base titulada "vict
 
 En la primera exploración de los datos nos concetraremos sobre todo en algunas columnas tales como la nacionalidad, el lugar de detención, el año de denuncia, el tipo de delito del que fue víctima, la provincia de origen. 
 
-## **EXPLORACIÓN DE LOS DATOS**
+**EXPLORACIÓN DE LOS DATOS**
 
 vamos a trabajar con la tabla victimas_accionar_represivo_ilegal
 
@@ -151,12 +154,12 @@ victimas_accionar_represivo_ilegal|>
 
 
 
-## **HIPÓTESIS PREVIA A LA EXPLORACIÓN DE LOS DATOS**
+**HIPÓTESIS PREVIA A LA EXPLORACIÓN DE LOS DATOS**
 
 Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas del accionar represivo ilegal eran de nacionalidad argentina, nacieron en grandes centros urbanos tales como Buenos Aires y Capital Federal, eran en su mayoría jóvenes menores de 30 años al momento de la detención. En segundo lugar, también sostenemos que la mayoría fue victima de desaparición forzada y que menos de la mitad de las víctimas denunciadas como desaparecidas fueron halladas.  
 
 
-##**Análisis de la exploración inicial de los datos**
+**Análisis de la exploración inicial de los datos**
 
 En una primera gran exploración de los datos, hemos podido observar que la mayoría de las personas fueron secuestradas en grandes centros urbanos tales como la Capital Federal, la provincia de Buenos Aires, Santa Fe, Mendoza y Córdoba representando un valor de 6316 sobre un total de 8753. En principio esto confirma las impresiones iniciales sobre la dictadura militar ya que corrobora que los hechos de represión ilegal fueron mayores en cantidades nominales en estas ciudades. 
 También hemos podido corroborar que la mayoría de las víctimas eran personas jóvenes mayores a 30 años y que un 3,2% de las víctimas eran mujeres que cursaban un embarazo. Y, además, aunque esto no es muy popular existieron víctimas que no eran de nacionalidad argentina. 
@@ -174,14 +177,14 @@ También cabe preguntar sí es que las fechas de detención o secuestro de las v
 
 
 
-##**Modificación de hipótesis y agregado de nuevos datos**
+**Modificación de hipótesis y agregado de nuevos datos**
 
 Luego de las primeras observaciones, vamos a empezar a explorar nuevos datos para incorporar al análisis. Por eso mismo vamos a incorporar los datos del censo de 1970 realizado en la República Argentina. 
 La hipótesis es que la tasa de desaparecidos
 
 
 
-##**Tasa de desaparecidos de acuerdo al censo nacional de población de 1970**
+**Tasa de desaparecidos de acuerdo al censo nacional de población de 1970**
 
 Desaparecidos de acuerdo a la cantidad de población por provincias.
 
@@ -214,9 +217,22 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
 Tal como podemos observar en la tabla victimas_provincia, si evaluamos en relación a la población del censo de 1970, el porcentaje de desaparecidos por provincia se modifica. Tucuman representa la provincia con mayor proporción de desaparecidos con un valor de 0,074% y en segundo lugar se encuentra Capital Federal con un valor de 0,069%. Luego, se ubica la provincia de Buenos Aires con un 0,040 seguido por la provincia de Tierra del Fuego con un valor de 0,037. Esto sucede debido a la baja densidad poblacional de la provincia austral. Seguidamente encontramos a Córdoba con un valor de 0,034. Lo llamativo es el sexto lugar ocupado por la provincia de Jujuy con una distancia de 3 puntos porcentuales de Córdoba. 
 Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes con valores de 0,012 y 0,016 respectivamente. 
 
-#**MAPA DE CENTROS CLANDESTINOS** (FALTARIA MAPA DE ARGENTINA)
+**MAPA DE CENTROS CLANDESTINOS** 
 
+ #Elio intentamos hacer el mapa y logramos agregar las capas pero no se ven los bordes, ¿sabes como deberìamos hacer eso?
+ 
+ 
 ```{r}
+provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% st_as_sf()
+
+
+ggplot(provinces) + 
+  geom_point(data = centros_clandestinos_detencion, mapping = aes(x = lon, y = lat), colour = "red") + 
+  coord_sf()
+```
+
+
+```{r warning=FALSE}
 
 centros_clandestinos_detencion|>
     ggplot(aes(lon,lat)) +
@@ -226,11 +242,20 @@ centros_clandestinos_detencion|>
 ```
 
 
+```{r echo=TRUE}
+centros_clandestinos_detencion|>
+  group_by(lugar_emplazamiento_propiedad)|>
+  summarise(n=n())|>
+  ggplot(aes(n, lugar_emplazamiento_propiedad))+
+  geom_bar(stat = "identity")
 
 
-##**Promedio de edad de los desaparecidos** 
+```
 
-```{r}
+
+**Promedio de edad de los desaparecidos** 
+
+```{r warning=FALSE}
 victimas_accionar_represivo_ilegal|>
   mutate(edad = stringr:: str_remove(edad_al_momento_del_hecho, "años"))|>
   summarise(mean(as.numeric(edad), na.rm = TRUE))
@@ -242,7 +267,7 @@ Luego de realizar una limpieza de datos, hemos podido establecer que el promedio
 
 
 
-##**Recuento de cantidad de niños y niñas desaparecidxs**
+**Recuento de cantidad de niños y niñas desaparecidxs**
 
 Vamos a realizar un recuento de cuantos niños y niñas fueron victimas de la acción represiva. 
 
@@ -260,20 +285,22 @@ Según lo observado, la mayoría de los niños nacieron en cautiverio, 47 bebes.
 
 
 
-## **Cantidad de victimas halladas**
+**Cantidad de victimas halladas**
 
 En función de los datos, podemos observar que hay un total de 2412 victimas que fueron encontradas, ya que poseen una fecha de hallazgos de restos. 
 
 ```{r echo=TRUE}
 victimas <- victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
-  group_by(fecha_asesinato_o_hallazgo_de_restos)
+  group_by(anio_denuncia, fecha_asesinato_o_hallazgo_de_restos)|>
+  count()
+  
 print(victimas)
 
 ```
 
 
-##**Gráfico de la cantidad de víctimas según la fecha de hallazgo**
+**Cantidad de víctimas según la fecha de hallazgo**
 
 
 ```{r}
@@ -281,21 +308,19 @@ victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(fecha_asesinato_o_hallazgo_de_restos)|>
   count()
-#ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
-  #geom_point(aes(colors()))
   
-
 ```
 
 
 
-```{r echo=TRUE}
-centros_clandestinos_detencion|>
-  group_by(lugar_emplazamiento_propiedad)|>
-  summarise(n=n())|>
-  ggplot(aes(n, lugar_emplazamiento_propiedad))+
-  geom_bar(stat = "identity")
 
 
-```
 
+**Análisis y conclusiones preliminares**
+
+Luego de haber realizado un análisis de las variables y en función de las preguntas establecidas hemos podido determinar que, a pesar de que en términos nominales, la cantidad de victimas del accionar ilegal es mayor en los grandes centros urbanos cuando esta se relaciona en función de la población los datos son distintos. Así podemos ver que Tucuman tuvo una mayor tasa de desaparecidos per cápita y luego se encuentra Capital Federal. Luego de realizar esta tasa de desaparecidos, procedimos a tomar los datos procedentes de centros_clandestinos_detencion para geolocalizar los centros clandestinos y poder visualizar si la ubicación de estos centros se relaciona con la cantidad de desaparecidos por provincias.  
+A partir de estos datos es que indagamos el lugar de emplazamiento de los centros clandestinos de detención y pudimos observar el rol fundamental que tenían las policías provinciales como lugares de detención, por sobre los lugares de la Fuerza Armada que hubieramos creído fueron los principales. 
+
+También hemos podido observar que los niños mayores a 1 año no fueron las principales victimas del accionar represivo. Pero sí, tal como nos muestra la historia, la mayor cantidad de infantes fueron bebes apropiados al momento de su nacimiento. Sin embargo, con el paquete stringr pudimos limpiar los datos de la columna edad_al_momento_del_hecho y calcular el promedio de edad de las víctimas que fue determinado de 28,39 años confirmando nuestra hipótesis inicial.
+
+A pesar del intento, no pudimos dar con la herramienta necesaria para limpiar los datos de la columna fecha_asesinato_o_de_hallazgos_de_restos para poder recapitular la cantidad de víctimas encontradas por año para observar en qué años se hallaron sus restos. 
