@@ -57,7 +57,7 @@ Primero contamos cuantas victimas hay de nacionalidad argentina y menores a 30 a
 ```{r echo=FALSE}
 
 victimas_accionar_represivo_ilegal|>
-  count(nacionalidad == "ARGENTINA", edad_al_momento_del_hecho <=30)
+  count(argentinxs = nacionalidad == "ARGENTINA", menores_30 = edad_al_momento_del_hecho <=30)
 
 
 ```
@@ -221,14 +221,19 @@ Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes
 
  #Elio intentamos hacer el mapa y logramos agregar las capas pero no se ven los bordes, ¿sabes como deberìamos hacer eso?
  
+ #provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% st_as_sf()
  
 ```{r}
-provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% st_as_sf()
+
+provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% 
+  st_transform(crs = "+proj=lonlat")
 
 
 ggplot(provinces) + 
   geom_point(data = centros_clandestinos_detencion, mapping = aes(x = lon, y = lat), colour = "red") + 
   coord_sf()
+
+
 ```
 
 
@@ -246,8 +251,9 @@ centros_clandestinos_detencion|>
 centros_clandestinos_detencion|>
   group_by(lugar_emplazamiento_propiedad)|>
   summarise(n=n())|>
+  mutate(lugar_emplazamiento_propiedad = reorder(lugar_emplazamiento_propiedad, n))|>
   ggplot(aes(n, lugar_emplazamiento_propiedad))+
-  geom_bar(stat = "identity")
+  geom_col()
 
 
 ```
@@ -293,7 +299,10 @@ En función de los datos, podemos observar que hay un total de 2412 victimas que
 victimas <- victimas_accionar_represivo_ilegal|>
   filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
   group_by(anio_denuncia, fecha_asesinato_o_hallazgo_de_restos)|>
-  count()
+  count()|>
+  ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
+  geom_col()
+
   
 print(victimas)
 
@@ -301,6 +310,15 @@ print(victimas)
 
 
 **Cantidad de víctimas según la fecha de hallazgo**
+
+ !is.na 
+
+```{r}
+lubridate::dmy(victimas_accionar_represivo_ilegal$fecha_asesinato_o_hallazgo_de_restos)|>
+  parse_date_time(year(1976-1979))
+
+```
+
 
 
 ```{r}
