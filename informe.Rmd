@@ -105,7 +105,7 @@ victimas_accionar_represivo_ilegal|>
  group_by(provincia_nacimiento)|>
   summarise(n=n())|>
   ggplot(aes(n,provincia_nacimiento))+
-  geom_bar(stat = "identity")
+  geom_col()
   
 ```
 
@@ -211,6 +211,9 @@ victima_provincias <- victimas_accionar_represivo_ilegal|>
   mutate(porcentaje = n/sum(n)*100)|>
   full_join(total_poblacion_prov_nac, by = "provincia_nacimiento")|>
   mutate(porc_des= (n/Total)*100)
+
+
+print(victima_provincias)
 
 ```
 
