@@ -227,10 +227,8 @@ Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes
  #provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% st_as_sf()
  
 ```{r}
-
 provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% 
   st_transform(crs = "+proj=lonlat")
-
 
 ggplot(provinces) + 
   geom_point(data = centros_clandestinos_detencion, mapping = aes(x = lon, y = lat), colour = "red") + 
