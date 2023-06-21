@@ -64,7 +64,7 @@ victimas_accionar_represivo_ilegal|>
 
 ```{r echo=TRUE}
 
-jovenes_grandes_ciudades = 1353
+
 ciudades = c("BUENOS AIRES", "CORDOBA", "MENDOZA", "SANTA FE", "CAPITAL FEDERAL")
 victimas_accionar_represivo_ilegal|>
   filter(lugar_detencion_secuestro %in% ciudades, edad_al_momento_del_hecho<=30)|>
@@ -162,7 +162,7 @@ Como primera hipótesis exploratoria, sostenemos que la mayoría de las victimas
 **Análisis de la exploración inicial de los datos**
 
 En una primera gran exploración de los datos, hemos podido observar que la mayoría de las personas fueron secuestradas en grandes centros urbanos tales como la Capital Federal, la provincia de Buenos Aires, Santa Fe, Mendoza y Córdoba representando un valor de 6316 sobre un total de 8753. En principio esto confirma las impresiones iniciales sobre la dictadura militar ya que corrobora que los hechos de represión ilegal fueron mayores en cantidades nominales en estas ciudades. 
-También hemos podido corroborar que la mayoría de las víctimas eran personas jóvenes mayores a 30 años y que un 3,2% de las víctimas eran mujeres que cursaban un embarazo. Y, además, aunque esto no es muy popular existieron víctimas que no eran de nacionalidad argentina. 
+También hemos podido corroborar que la mayoría de las víctimas eran personas jóvenes menores a 30 años y que un 3,2% de las víctimas eran mujeres que cursaban un embarazo. Y, además, aunque esto no es muy popular existieron víctimas que no eran de nacionalidad argentina. 
 En las denuncias aparece como motivo la desaparición forzada, siendo esta la causa principal de denuncia, aunque también aparecen otros como el asesinato. Sin embargo, aquí la base de datos posee la particularidad de que exhibe las diferentes causas de denuncia, enumerandolas, lo cual hace dificil la aplicación de una sola categoría. Para ello habría que proceder a una limpieza de datos. 
 También hemos podido establecer que el 27,5% (2412) victimas fueron halladas o poseen datos certeros de la fecha de asesinato o del hallazgo de restos. 
 observamos que, en el clima de la recuperación de la democracia y los primeros juicios a las juntas militares, se ubica el año promedio de denuncias de los cuales son recuperados los datos. 
@@ -222,29 +222,17 @@ Las dos provincias con menor cantidad de desaparecidos son Misiones y Corrientes
 
 **MAPA DE CENTROS CLANDESTINOS** 
 
- #Elio intentamos hacer el mapa y logramos agregar las capas pero no se ven los bordes, ¿sabes como deberìamos hacer eso?
- 
- #provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% st_as_sf()
- 
-```{r}
-provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% 
-  st_transform(crs = "+proj=lonlat")
-
-ggplot(provinces) + 
+ggplot(separated_coord) + 
   geom_point(data = centros_clandestinos_detencion, mapping = aes(x = lon, y = lat), colour = "red") + 
   coord_sf()
 
+```{r echo=FALSE, warning=FALSE}
+provinces <- st_read(dsn = "datos/mapa_argentina/arg_admbnda_adm1_unhcr2017.shp") %>% 
+  st_transform(crs = "+proj=lonlat")
 
-```
-
-
-```{r warning=FALSE}
-
-centros_clandestinos_detencion|>
-    ggplot(aes(lon,lat)) +
-     geom_point()
-
-
+ggplot(separated_coord) + 
+  geom_point(data = centros_clandestinos_detencion, mapping = aes(x = lon, y = lat), colour = "red") + 
+  coord_sf()
 ```
 
 
@@ -296,41 +284,35 @@ Según lo observado, la mayoría de los niños nacieron en cautiverio, 47 bebes.
 
 En función de los datos, podemos observar que hay un total de 2412 victimas que fueron encontradas, ya que poseen una fecha de hallazgos de restos. 
 
-```{r echo=TRUE}
-victimas <- victimas_accionar_represivo_ilegal|>
-  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
-  group_by(anio_denuncia, fecha_asesinato_o_hallazgo_de_restos)|>
-  count()|>
-  ggplot(aes(fecha_asesinato_o_hallazgo_de_restos,n))+
-  geom_col()
-
-  
-print(victimas)
-
-```
-
 
 **Cantidad de víctimas según la fecha de hallazgo**
 
- !is.na 
 
 ```{r}
-lubridate::dmy(victimas_accionar_represivo_ilegal$fecha_asesinato_o_hallazgo_de_restos)|>
-  parse_date_time(year(1976-1979))
+  fecha_asesinato_sin_na <-lubridate::dmy(victimas_accionar_represivo_ilegal$fecha_asesinato_o_hallazgo_de_restos)|>
+  na.omit(fecha_asesinato_o_hallazgo_de_restos)
 
 ```
 
 
-
 ```{r}
-victimas_accionar_represivo_ilegal|>
-  filter(!is.na(fecha_asesinato_o_hallazgo_de_restos))|>
-  group_by(fecha_asesinato_o_hallazgo_de_restos)|>
-  count()
+anios <- format(as.Date(fecha_asesinato_sin_na, format="%Y-%m-%d"),"%Y")|>
+  table()
+
+```
+```{r}
+casos_por_anio <- as.data.frame(anios)
+
+colnames(casos_por_anio) <- c("años","cantidad")
+
+print(casos_por_anio)
+```
+```{r echo=TRUE}
   
+ggplot(casos_por_anio, aes(x = años, y = cantidad)) +
+  geom_col()
+
 ```
-
-
 
 
 
@@ -342,4 +324,4 @@ A partir de estos datos es que indagamos el lugar de emplazamiento de los centro
 
 También hemos podido observar que los niños mayores a 1 año no fueron las principales victimas del accionar represivo. Pero sí, tal como nos muestra la historia, la mayor cantidad de infantes fueron bebes apropiados al momento de su nacimiento. Sin embargo, con el paquete stringr pudimos limpiar los datos de la columna edad_al_momento_del_hecho y calcular el promedio de edad de las víctimas que fue determinado de 28,39 años confirmando nuestra hipótesis inicial.
 
-A pesar del intento, no pudimos dar con la herramienta necesaria para limpiar los datos de la columna fecha_asesinato_o_de_hallazgos_de_restos para poder recapitular la cantidad de víctimas encontradas por año para observar en qué años se hallaron sus restos. 
+Luego de utilizar el paquete Lubridate para proceder a la limpieza de NA, pudimos observar que la fecha de hallazgo de restos se concentran en el periodo 1974-1978. El año 1976 fue el momento en el que más restos hallaron con un valor de 999. Lo interesante es que el primer caso de hallazgo de restos data del año 1967. 
